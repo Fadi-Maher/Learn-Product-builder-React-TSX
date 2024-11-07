@@ -7,7 +7,7 @@ import { ButtonHTMLAttributes, ReactNode } from "react"
 
 const Button = ({children, className, ...rest}:Iprops) => {
   return (
-    <button className={`text-white p-2 rounded w-full font-bold${className}`} {...rest}>
+    <button className={`text-white p-2 rounded w-full font-bold ${className}`} {...rest}>
         {children}
     </button>
   )
