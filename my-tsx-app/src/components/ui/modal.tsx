@@ -1,7 +1,7 @@
 import { Description, Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ReactNode } from 'react'
-import Button from './button';
+// import Button from './button';
 
 interface IProps {
   isOpen: boolean;
