@@ -122,3 +122,16 @@ export const formInputsLists:IformInput[]=[
         type:"number"
     },
 ]
+
+export const colors : string[] = [
+    "#FF5733", // A warm red-orange
+    "#33FF57", // A bright green
+    "#3357FF", // A vibrant blue
+    "#F5A623", // A golden yellow
+    "#9B59B6", // A purple
+    "#1ABC9C", // A turquoise green
+    "#E74C3C", // A bright red
+    "#2ECC71", // A soft green
+    "#F39C12", // A bright orange
+    "#8E44AD"  // A deep purple
+  ]

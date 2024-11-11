@@ -9,7 +9,10 @@ import { formInputsLists } from "./data";
 import Input from "./components/ui/input";
 import { IProduct } from "./interfaces";
 import { productValidation } from "./validation";
-import { object } from "yup";
+// import { object } from "yup";
+import ErrorMsg from "./components/errorMsg";
+import { colors } from "./data";
+import CircleColor from "./components/circleColor";
 // import { input } from "framer-motion/client";
 // import { Description } from "@headlessui/react";
 
@@ -24,11 +27,18 @@ function App() {
     colors: []
   })
 
+  const [errors , setErrors] = useState({ title: '',description: '', imgURL: '',price: '',})
+  const [tempColors , setTempColors] = useState<string[]>([])
+
   function onchangeHandler(event: ChangeEvent<HTMLInputElement>) {
     const { value, name } = event.target
     setProduct({
       ...product,
       [name]: value
+    })
+    setErrors({
+      ...errors,
+      [name]: ""
     })
   }
 
@@ -42,10 +52,11 @@ function App() {
         imgURL: product.imgURL,
         price: product.price
       });
-      console.log(errors)
+      // console.log(errors)
       
       const hasErrorMsg = Object.values(errors).some(value => value=== "")&& Object.values(errors).every(value => value=== "")
       if (!hasErrorMsg){
+        setErrors(errors)
         return
       } 
     console.log("sent")
@@ -76,13 +87,18 @@ function App() {
   const renderFormInputList = formInputsLists.map(input => (
 
     <div className="flex flex-col w-80" key={input.id}>
-      <label htmlFor={input.id}>{input.label}</label>
+      <label className="font-semibold" htmlFor={input.id}>{input.label}</label>
       <Input type="text" id={input.id} name={input.name} value={product[input.name]} onChange={onchangeHandler} />
+      <ErrorMsg msg={errors[input.name]}/>
     </div>
+   ));
 
-  ));
-
-
+const renderProductColor= colors.map((color)=>{
+  return  <CircleColor color={color} key={color}
+   onClick={()=>{
+    setTempColors((prev)=>[...prev , color])
+  }}/>
+})
 
   return (
 
@@ -115,11 +131,17 @@ function App() {
       >
         <form className="space-y-3" onSubmit={submitHandler}>
           {renderFormInputList}
+       
+       <div className="flex items-center space-x-2">
+        {renderProductColor}
+       </div>
+          
 
           <div className="flex flex-1 gap-2">
-            <Button className="bg-indigo-900 p-2 rounded  " onClick={closeModal}>submit</Button>
+            <Button className="bg-indigo-900 p-2 rounded  "  >submit</Button>
             <Button className="bg-red-900 p-2 rounded " onClick={onCancel}>cancel</Button>
           </div>
+
 
         </form>
 
