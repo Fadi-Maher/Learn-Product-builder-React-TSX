@@ -13,6 +13,9 @@ import { productValidation } from "./validation";
 import ErrorMsg from "./components/errorMsg";
 import { colors } from "./data";
 import CircleColor from "./components/circleColor";
+import { v4 as uuid } from "uuid";
+import Category from "./components/ui/select";
+
 // import { input } from "framer-motion/client";
 // import { Description } from "@headlessui/react";
 
@@ -29,6 +32,9 @@ function App() {
 
   const [errors , setErrors] = useState({ title: '',description: '', imgURL: '',price: '',})
   const [tempColors , setTempColors] = useState<string[]>([])
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [products, setProducts] = useState<IProduct[]>(ProductList);
+ 
 
   function onchangeHandler(event: ChangeEvent<HTMLInputElement>) {
     const { value, name } = event.target
@@ -59,7 +65,18 @@ function App() {
         setErrors(errors)
         return
       } 
-    console.log("sent")
+    // console.log("sent")
+    setProducts(prev=>[{...product , id:uuid(),colors:tempColors} ,...prev])
+    setProduct({
+      title: '',
+      description: '',
+      imgURL: '',
+      price: '',
+      category: '',
+      colors: []
+    });
+    setTempColors([])
+    closeModal()
   }
 
 
@@ -76,14 +93,13 @@ function App() {
     closeModal()
   }
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // const [modal2Show, setModal2Show] = useState(false)
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const renderProductList = ProductList.map(product => <ProductCard key={product.id} product={product} />)
+  const renderProductList = products.map(product => <ProductCard key={product.id} product={product} />)
   const renderFormInputList = formInputsLists.map(input => (
 
     <div className="flex flex-col w-80" key={input.id}>
@@ -96,6 +112,10 @@ function App() {
 const renderProductColor= colors.map((color)=>{
   return  <CircleColor color={color} key={color}
    onClick={()=>{
+    if(tempColors.includes(color)){
+      setTempColors(prev => prev.filter (item =>item !== color ))
+      return
+    }
     setTempColors((prev)=>[...prev , color])
   }}/>
 })
@@ -130,12 +150,21 @@ const renderProductColor= colors.map((color)=>{
         title="Add New Product"
       >
         <form className="space-y-3" onSubmit={submitHandler}>
-          {renderFormInputList}
-       
-       <div className="flex items-center space-x-2">
-        {renderProductColor}
-       </div>
-          
+              
+             {renderFormInputList}  
+             
+             <Category/>
+
+            <div className="flex items-center space-x-2">
+              {renderProductColor}
+            </div>
+
+            
+            
+        
+            <div className="flex items-center flex-wrap space-x-1">
+            {tempColors.map(color =>( <span className="p-1 rounded" style={{backgroundColor:color  }} key={color}>{color}</span> ))}
+            </div>
 
           <div className="flex flex-1 gap-2">
             <Button className="bg-indigo-900 p-2 rounded  "  >submit</Button>
