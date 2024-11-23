@@ -63,7 +63,7 @@ const ProductCard = ({ product }: IProps) => {
       </div>
 
       <div className="flex justify-between gap-2 my-2">
-        <Button className=" bg-indigo-600  ">EDIT</Button>
+        <Button className=" bg-indigo-600  "> EDIT</Button>
         <Button className=" bg-red-600  ">DESTROY</Button>
       </div>
     </div>
