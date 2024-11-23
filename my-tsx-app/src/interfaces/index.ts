@@ -3,7 +3,10 @@ export interface IProduct {
     title: string;
     price: string;
     description: string;
-    category: string;
+    category:{
+        name:string;
+        imgURL: string;
+    };
     imgURL: string;
     colors: string[];
 }
@@ -18,5 +21,5 @@ export interface IformInput {
 export interface Icategory {
     id : string ;
     name : string ; 
-    imageURL : string 
+    imgURL : string 
 }
