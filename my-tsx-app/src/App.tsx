@@ -81,23 +81,20 @@ function App() {
     });
     // console.log(errors)
 
-    const hasErrorMsg =
-      Object.values(errors).some((value) => value === "") &&
-      Object.values(errors).every((value) => value === "");
-    if (!hasErrorMsg) {
+    const hasErrorMsg = Object.values(errors).some((value) => value !== "");
+    if (hasErrorMsg) {
       setErrors(errors);
       return;
     }
     // console.log("sent")
-    setProducts((prev) => [
-      {
-        ...product,
-        id: uuid(),
-        colors: tempColors,
-        category: selectedCategory,
-      },
-      ...prev,
-    ]);
+    setProducts((prev) =>
+      prev.map((p) =>
+        p.id === productEdit.id
+          ? { ...p, ...product, colors: tempColors, category: selectedCategory }
+          : p
+      )
+    );
+
     setProduct({
       title: "",
       description: "",
@@ -110,7 +107,7 @@ function App() {
       colors: [],
     });
     setTempColors([]);
-    closeModal();
+    setIsEditOpen(false);
   };
 
   const submitHandler = (event: FormEvent<HTMLFormElement>): void => {
