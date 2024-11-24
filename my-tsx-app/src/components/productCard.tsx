@@ -7,9 +7,10 @@ import CircleColor from "./circleColor";
 
 interface IProps {
   product: IProduct;
+  setProductEdit: (product: IProduct) => void;
 }
 
-const ProductCard = ({ product }: IProps) => {
+const ProductCard = ({ product, setProductEdit }: IProps) => {
   const [showDetails, setShowDetails] = useState(false);
 
   // rendercolors
@@ -19,6 +20,10 @@ const ProductCard = ({ product }: IProps) => {
 
   const toggleDescription = () => {
     setShowDetails(!showDetails);
+  };
+
+  const handleEditClick = () => {
+    setProductEdit(product); // Opens the edit modal with the selected product's details
   };
 
   return (
@@ -63,7 +68,10 @@ const ProductCard = ({ product }: IProps) => {
       </div>
 
       <div className="flex justify-between gap-2 my-2">
-        <Button className=" bg-indigo-600  "> EDIT</Button>
+        <Button onClick={handleEditClick} className=" bg-indigo-600  ">
+          {" "}
+          EDIT
+        </Button>
         <Button className=" bg-red-600  ">DESTROY</Button>
       </div>
     </div>
