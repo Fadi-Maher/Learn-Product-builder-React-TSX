@@ -1,4 +1,4 @@
-import { Description, Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
+import {    Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ReactNode } from 'react'
 // import Button from './button';
@@ -12,10 +12,11 @@ interface IProps {
 
 function Modal({ isOpen, closeModal, title, children }: IProps) {
   return (
-    <>
+    
       <AnimatePresence>
         {isOpen && (
           <Dialog static open={isOpen} onClose={closeModal} className="relative z-50">
+            <div className='backdrop-blur-sm fixed inset-0' aria-hidden="true">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -38,10 +39,11 @@ function Modal({ isOpen, closeModal, title, children }: IProps) {
                 </div> */}
               </DialogPanel>
             </div>
+            </div>
           </Dialog>
         )}
       </AnimatePresence>
-    </>
+  
   );
 }
 

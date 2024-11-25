@@ -16,6 +16,7 @@ import CircleColor from "./components/circleColor";
 import { v4 as uuid } from "uuid";
 import Category from "./components/ui/select";
 import { categories } from "./data";
+ import DeleteDialog from "./components/deleteDialog";
 
 // import { input } from "framer-motion/client";
 // import { Description } from "@headlessui/react";
@@ -42,8 +43,8 @@ function App() {
   const [tempColors, setTempColors] = useState<string[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [products, setProducts] = useState<IProduct[]>(ProductList);
-
-  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [productIdToDelete, setProductIdToDelete] = useState<string | null>(null);
+   const [isEditOpen, setIsEditOpen] = useState(false);
   const [productEdit, setProductEdit] = useState<IProduct>({
     title: "",
     description: "",
@@ -57,6 +58,9 @@ function App() {
   });
 
   const [selectedCategory, setSelectedCategory] = useState(categories[2]);
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
 
   function onchangeHandler(event: ChangeEvent<HTMLInputElement>) {
     const { value, name } = event.target;
@@ -190,11 +194,25 @@ function App() {
 
   const closeEditModal = () => setIsEditOpen(false);
 
+  const openDialogModal = (id: string) => {
+    setProductIdToDelete(id)
+    console.log(id)
+    setIsDialogOpen(true);
+  };
+  const closeDialogModal = () => {
+    setIsDialogOpen(false);
+  };
+
+
+
+
   const renderProductList = products.map((product) => (
     <ProductCard
       key={product.id}
       product={product}
       setProductEdit={openEditModal}
+      openDialog={() => openDialogModal(product.id)}  // Pass product id to openDialogModal
+       
     />
   ));
 
@@ -229,6 +247,27 @@ function App() {
       />
     );
   });
+
+
+  // const openDialog = () => {
+  //   setIsDialogOpen(true);
+  //   console.log("Opening dialog")
+  // };
+
+
+
+  const removeProductHandler = () => {
+     if (productIdToDelete) {
+      console.log("You want to delete product with id:", productIdToDelete);
+    
+     const  filtered =  products.filter((product) => product.id !== productIdToDelete)
+        setProducts(filtered); 
+      
+      setIsDialogOpen(false); 
+    }
+  };
+
+     
 
   return (
     <main className="container mx-auto">
@@ -325,9 +364,7 @@ function App() {
 
             <div className="flex flex-1 gap-2">
               <Button className="bg-indigo-900 p-2 rounded">Submit</Button>
-              <Button className="bg-red-900 p-2 rounded" onClick={onCancel}>
-                Cancel
-              </Button>
+              <Button className="bg-red-900 p-2 rounded" onClick={onCancel}> Cancel </Button>
             </div>
           </form>
         </Modal>
@@ -336,6 +373,17 @@ function App() {
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 container mx-auto gap-3">
         {renderProductList}
       </div>
+
+
+
+     {/* delete dialog */}
+     {isDialogOpen && <DeleteDialog onClose={closeDialogModal} onDelete={removeProductHandler}/> }
+
+          
+                   
+
+            
+
     </main>
   );
 }

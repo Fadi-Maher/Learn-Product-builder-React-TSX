@@ -4,15 +4,18 @@ import Button from "./ui/button";
 // import { txtSlicer } from "../utiles/function";
 import { useState } from "react";
 import CircleColor from "./circleColor";
-
+ 
+  
 interface IProps {
   product: IProduct;
   setProductEdit: (product: IProduct) => void;
+  openDialog: (id:any) => void;
+  
 }
 
-const ProductCard = ({ product, setProductEdit }: IProps) => {
+const ProductCard = ({ product, setProductEdit , openDialog  }: IProps) => {
   const [showDetails, setShowDetails] = useState(false);
-
+ 
   // rendercolors
   const renderProductColor = product.colors.map((color) => {
     return <CircleColor color={color} key={color} />;
@@ -23,9 +26,25 @@ const ProductCard = ({ product, setProductEdit }: IProps) => {
   };
 
   const handleEditClick = () => {
-    setProductEdit(product); // Opens the edit modal with the selected product's details
+    setProductEdit(product); 
   };
 
+  const handleRemoveClick = (id:any) => {
+    console.log(id)
+    // setProductEdit(product)
+    openDialog(product.id);  
+  };
+
+   
+
+
+ 
+
+  // const deleteProduct = ( ) => {
+  //    const updatedProductList = ProductList.filter((item) => item.id !== product.id);
+  //   setProducts(updatedProductList);  
+  // };
+  
   return (
     <div className="border rounded-md p-2 flex flex-col my-2">
       <Image
@@ -68,12 +87,11 @@ const ProductCard = ({ product, setProductEdit }: IProps) => {
       </div>
 
       <div className="flex justify-between gap-2 my-2">
-        <Button onClick={handleEditClick} className=" bg-indigo-600  ">
-          {" "}
-          EDIT
-        </Button>
-        <Button className=" bg-red-600  ">DESTROY</Button>
-      </div>
+        <Button onClick={handleEditClick} className=" bg-indigo-600"> EDIT</Button>
+        <Button onClick={() =>{handleRemoveClick(product.id)}}  className=" bg-red-600  ">REMOVE</Button>
+       </div>  
+     
+       {/* onDelete={() => removeProductHandler}  */}
     </div>
   );
 };
