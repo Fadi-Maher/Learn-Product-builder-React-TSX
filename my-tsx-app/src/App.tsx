@@ -1,7 +1,7 @@
 import ProductCard from "./components/productCard";
 import { ProductList } from "./data";
 import Modal from "./components/ui/modal";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState, useEffect } from "react";
 import Button from "./components/ui/button";
 import { formInputsLists } from "./data";
 // import { div } from "framer-motion/client";
@@ -17,11 +17,29 @@ import { v4 as uuid } from "uuid";
 import Category from "./components/ui/select";
 import { categories } from "./data";
  import DeleteDialog from "./components/deleteDialog";
+import { ToastContainer , toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; 
 
 // import { input } from "framer-motion/client";
 // import { Description } from "@headlessui/react";
 
 function App() {
+
+  useEffect(() => {
+    const storedProducts = localStorage.getItem("products");
+    if (storedProducts) {
+      setProducts(JSON.parse(storedProducts));
+    } else {
+      setProducts(ProductList);  
+    }
+  }, []);
+
+
+
+
+
+
+  
   const [product, setProduct] = useState<IProduct>({
     title: "",
     description: "",
@@ -73,32 +91,47 @@ function App() {
       [name]: "",
     });
   }
-
   const submitEditHandler = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    // console.log(product);
+
+    // Validate form inputs
     const errors = productValidation({
       title: product.title,
       description: product.description,
       imgURL: product.imgURL,
       price: product.price,
     });
-    // console.log(errors)
 
     const hasErrorMsg = Object.values(errors).some((value) => value !== "");
     if (hasErrorMsg) {
       setErrors(errors);
       return;
     }
-    // console.log("sent")
-    setProducts((prev) =>
-      prev.map((p) =>
+
+    // Update the products array
+    setProducts((prev) => {
+      const updatedProducts = prev.map((p) =>
         p.id === productEdit.id
           ? { ...p, ...product, colors: tempColors, category: selectedCategory }
           : p
-      )
-    );
+      );
 
+      // Save the updated product list to localStorage
+      localStorage.setItem("products", JSON.stringify(updatedProducts));
+      
+      toast("The product has been Edited!", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+      });
+      return updatedProducts;
+    });
+
+    // Reset the form and other states after the update
     setProduct({
       title: "",
       description: "",
@@ -110,21 +143,24 @@ function App() {
       },
       colors: [],
     });
+
     setTempColors([]);
     setIsEditOpen(false);
   };
 
+
   const submitHandler = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    // console.log(product);
+
+    // Validate product
     const errors = productValidation({
       title: product.title,
       description: product.description,
       imgURL: product.imgURL,
       price: product.price,
     });
-    // console.log(errors)
 
+    // Check if there are errors
     const hasErrorMsg =
       Object.values(errors).some((value) => value === "") &&
       Object.values(errors).every((value) => value === "");
@@ -132,16 +168,34 @@ function App() {
       setErrors(errors);
       return;
     }
-    // console.log("sent")
-    setProducts((prev) => [
-      {
-        ...product,
-        id: uuid(),
-        colors: tempColors,
-        category: selectedCategory,
-      },
-      ...prev,
-    ]);
+
+    // Add product to the products state
+    const newProduct = {
+      ...product,
+      id: uuid(),
+      colors: tempColors,
+      category: selectedCategory,
+    };
+
+    setProducts((prev) => {
+      const updatedProducts = [newProduct, ...prev];
+
+      // Save the updated products list to localStorage
+      localStorage.setItem("products", JSON.stringify(updatedProducts));
+      
+      toast("The product has been added!", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+      });
+      return updatedProducts;
+    });
+
+    // Clear form fields and reset states
     setProduct({
       title: "",
       description: "",
@@ -153,10 +207,12 @@ function App() {
       },
       colors: [],
     });
+
     setTempColors([]);
     closeModal();
   };
 
+  
   const onCancel = () => {
     console.log("canceled");
     setProduct({
@@ -255,15 +311,31 @@ function App() {
   // };
 
 
-
   const removeProductHandler = () => {
-     if (productIdToDelete) {
+    if (productIdToDelete) {
       console.log("You want to delete product with id:", productIdToDelete);
-    
-     const  filtered =  products.filter((product) => product.id !== productIdToDelete)
-        setProducts(filtered); 
-      
-      setIsDialogOpen(false); 
+
+     
+      const filtered = products.filter((product) => product.id !== productIdToDelete);
+
+  
+      setProducts(filtered);
+
+ 
+      localStorage.setItem("products", JSON.stringify(filtered));
+
+      // Display a toast notification for the successful deletion
+      toast("The product has been deleted!", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+      });
+     
+      setIsDialogOpen(false);
     }
   };
 
@@ -381,7 +453,7 @@ function App() {
 
           
                    
-
+      <ToastContainer/>
             
 
     </main>
