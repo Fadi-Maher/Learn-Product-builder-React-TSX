@@ -273,7 +273,7 @@ function App() {
   ));
 
   const renderFormInputList = formInputsLists.map((input) => (
-    <div className="flex flex-col w-80" key={input.id}>
+    <div className="flex flex-col w-auto" key={input.id}>
       <label className="font-semibold" htmlFor={input.id}>
         {input.label}
       </label>
@@ -342,7 +342,7 @@ function App() {
      
 
   return (
-    <main className="container mx-auto">
+    <main className="  mx-auto w-3/4 md:w-3/4 lg:w-3/4 ">
       {/* 
       <Button onClick={() => setModal2Show(true)}
         className="bg-indigo-600 text-white p-2 rounded mt-10">
@@ -365,12 +365,12 @@ function App() {
         Add Product
       </Button>
       {/* add  model*/}
-      <Modal
+      <Modal 
         isOpen={isModalOpen}
         closeModal={closeModal}
         title="Add New Product"
       >
-        <form className="space-y-3" onSubmit={submitHandler}>
+        <form className="space-y-3 " onSubmit={submitHandler}>
           {renderFormInputList}
 
           <Category
