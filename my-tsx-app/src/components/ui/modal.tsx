@@ -24,6 +24,7 @@ function Modal({ isOpen, closeModal, title, children  }: IProps) {
               exit={{ opacity: 0 }}
               className="fixed inset-0 bg-black/30"
             />
+              
             <div className="fixed inset-0 flex  items-center justify-center p-4">
               <DialogPanel
                 as={motion.div}
